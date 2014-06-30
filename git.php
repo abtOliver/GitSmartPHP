@@ -3,9 +3,13 @@
 define("DEBUG_LOG",        false);
 define("HTTP_AUTH",        false);
 define("GZIP_SUPPORT",     false);
-define("GIT_ROOT",         "./git");
+if(isset($_ENV['OPENSHIFT_DATA_DIR'])){
+	define("GIT_ROOT",         $_ENV['OPENSHIFT_DATA_DIR'] . "git");
+}else{
+	define("GIT_ROOT",         "./git");
+}
 define("GIT_HTTP_BACKEND", "/usr/libexec/git-core/git-http-backend");
-define("GIT_BIN",          "/usr/bin/git");
+define("GIT_BIN",          "/usr/local/bin/git");
 define("REMOTE_USER",      "smart-http");
 define("LOG_RESPONSE",     "response.log");
 define("LOG_PROCESS",      "process.log");
@@ -28,15 +32,20 @@ if(!isset($_SERVER["PATH_INFO"]))
     {
       if($_GET["action"] == "new")
       {
+      	if(!file_exists(GIT_ROOT))
+      	{
+      		mkdir(GIT_ROOT);
+      	}
         if(file_exists(GIT_ROOT . "/" . $_GET["repo"]))
         {
           echo "Repo already exists.<br><br>" . PHP_EOL;
         }
         else
         {
-          mkdir(GIT_ROOT . "/" . $_GET["repo"]);
-          system(GIT_BIN . " init --bare " . GIT_ROOT . "/" . $_GET["repo"]);
-          echo "<br><br>" . PHP_EOL;
+          //mkdir(GIT_ROOT . "/" . $_GET["repo"]);
+          $sExec = GIT_BIN . " init --bare --shared=0660 " . GIT_ROOT . "/" . $_GET["repo"];
+          system($sExec);
+          echo "<br>". $sExec . "<br>" . PHP_EOL;
         }
       }
       if($_GET["action"] == "delete")
