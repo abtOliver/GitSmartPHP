@@ -9,7 +9,7 @@ if(isset($_ENV['OPENSHIFT_DATA_DIR'])){
 	define("GIT_ROOT",         "./git");
 }
 define("GIT_HTTP_BACKEND", "/usr/libexec/git-core/git-http-backend");
-define("GIT_BIN",          "/usr/local/bin/git");
+define("GIT_BIN",          "/usr/bin/git");
 define("REMOTE_USER",      "smart-http");
 define("LOG_RESPONSE",     "response.log");
 define("LOG_PROCESS",      "process.log");
