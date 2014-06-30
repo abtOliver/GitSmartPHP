@@ -32,10 +32,6 @@ if(!isset($_SERVER["PATH_INFO"]))
     {
       if($_GET["action"] == "new")
       {
-      	if(!file_exists(GIT_ROOT))
-      	{
-      		mkdir(GIT_ROOT);
-      	}
         if(file_exists(GIT_ROOT . "/" . $_GET["repo"]))
         {
           echo "Repo already exists.<br><br>" . PHP_EOL;
@@ -67,6 +63,10 @@ if(!isset($_SERVER["PATH_INFO"]))
           }
         }
       }
+    }
+    if(!file_exists(GIT_ROOT))
+    {
+    	mkdir(GIT_ROOT);
     }
     if(file_exists(GIT_ROOT . "/"))
     {
