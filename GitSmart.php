@@ -8,7 +8,7 @@ if(isset($_ENV['OPENSHIFT_DATA_DIR'])){
 }else{
 	define("GIT_ROOT",         "./git");
 }
-define("GIT_HTTP_BACKEND", "/usr/libexec/git-core/git-http-backend");
+define("GIT_HTTP_BACKEND", "/usr/lib/git-core/git-http-backend");
 define("GIT_BIN",          "/usr/bin/git");
 define("REMOTE_USER",      "smart-http");
 define("LOG_RESPONSE",     "response.log");
