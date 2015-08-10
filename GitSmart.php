@@ -24,9 +24,14 @@ if(HTTP_AUTH)
   }
 }
 
-if(!isset($_SERVER["PATH_INFO"]))
+$pathInfo = $_SERVER['PATH_INFO'];
+$pathItems = isset($pathInfo) ? explode('/',$pathInfo) : ['','']; 
+
+if($pathItems[1] == '') $pathItems[1] = 'admin';
+
+if(!isset($pathInfo) || strtolower($pathItems[1]) == 'admin' )
 {
-  if(isset($_GET["admin"]))
+  if(isset($_GET["admin"]) || strtolower($pathItems[1]) == 'admin' )
   {
     if(isset($_GET["action"]))
     {
@@ -185,4 +190,3 @@ if(DEBUG_LOG)
   file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
 }
 
-?>
