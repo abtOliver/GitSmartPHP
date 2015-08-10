@@ -24,15 +24,15 @@ Setup
 
 1. Make sure your web server has Git installed and your web server supports PHP
 
-2. Upload `git.php` onto your hosting directory (Eg. /home/my/public_html/git.php)
+2. Upload `GitSmart.php` onto your hosting directory (Eg. /home/my/public_html/git.php)
 
 3. Create a folder (Eg. /home/my/public_html/repo) for all your git repositories storage.
 
 4. `chown apache:apache git.php` and `chown apache:apache repo`
 
-5. Proceed to `http://<yoursite>/git.php?admin` to init a repo and to manage them
+5. Proceed to `http://<yoursite>/GitSmart.php?admin` to init a repo and to manage them
 
-6. With `git remote add origin http://<yoursite>/git.php/<reponame>`, you can push your local git repo to your private repo online.
+6. With `git remote add origin http://<yoursite>/GitSmart.php/<reponame>`, you can push your local git repo to your private repo online.
 
 Todo
 ----
