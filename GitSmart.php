@@ -51,7 +51,7 @@ if(!isset($pathInfo) || strtolower($pathItems[1]) == 'admin' )
       }
       if($_GET["action"] == "delete")
       {
-      	
+
             $repo = trim($_GET['repo']."");
 
             if($repo != "") {
@@ -69,7 +69,15 @@ if(!isset($pathInfo) || strtolower($pathItems[1]) == 'admin' )
                     $log = "Delete " . $repo . " failed (".$return_code.")..." . PHP_EOL;
                     echo $log."<br><br>";
                     file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
+
                 }
+
+            } else {
+
+                $log = "Tried to delete / failed ..." . PHP_EOL;
+                echo $log."<br><br>";
+                file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
+
             }
 
       }
