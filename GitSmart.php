@@ -35,26 +35,33 @@ if(!isset($pathInfo) || strtolower($pathItems[1]) == 'admin' )
   {
     if(isset($_GET["action"]))
     {
-      if($_GET["action"] == "new")
-      {
-        if(file_exists(GIT_ROOT . "/" . $_GET["repo"]))
-        {
-          echo "Repo already exists.<br><br>" . PHP_EOL;
-        }
-        else
-        {
-          //mkdir(GIT_ROOT . "/" . $_GET["repo"]);
-          $sExec = GIT_BIN . " init --bare --shared=0660 " . GIT_ROOT . "/" . $_GET["repo"];
-          system($sExec);
-          echo "<br>". $sExec . "<br>" . PHP_EOL;
-        }
-      }
-      if($_GET["action"] == "delete")
-      {
+    	
+        $repo = trim($_GET['repo']."");
 
-            $repo = trim($_GET['repo']."");
+        if($_GET["action"] == "new") {
 
-            if($repo != "") {
+
+            if(file_exists(GIT_ROOT . "/" . $repo)) {
+
+              echo "Repo already exists.<br><br>" . PHP_EOL;
+
+            } else if($repo != "") {
+
+                mkdir(GIT_ROOT . "/" . $repo);
+                system(GIT_BIN . " init --bare " . GIT_ROOT . "/" . $_GET["repo"]);
+                echo "<br><br>" . PHP_EOL;
+
+            }
+
+        }
+
+        if($_GET["action"] == "delete") {
+
+            if(!file_exists(GIT_ROOT . "/" . $repo)) {
+
+                echo "Repo not exists.<br><br>" . PHP_EOL;
+
+            } else if($repo != "") {
 
                 system("rm -rf " . GIT_ROOT . "/" . $repo, $return_code);
 
@@ -80,8 +87,10 @@ if(!isset($pathInfo) || strtolower($pathItems[1]) == 'admin' )
 
             }
 
-      }
+        }
+
     }
+    
     if(!file_exists(GIT_ROOT))
     {
     	mkdir(GIT_ROOT);
