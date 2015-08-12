@@ -51,22 +51,27 @@ if(!isset($pathInfo) || strtolower($pathItems[1]) == 'admin' )
       }
       if($_GET["action"] == "delete")
       {
-        if(!file_exists(GIT_ROOT . "/" . $_GET["repo"]))
-        {
-          echo "Repo not exists.<br><br>" . PHP_EOL;
-        }
-        else
-        {
-          system("rm -rf " . GIT_ROOT . "/" . $_GET["repo"], $return_code);
-          if($return_code == 0)
-          {
-            echo "Delete " . $_GET["repo"] . " success ...<br><br>" . PHP_EOL;
-          }
-          else
-          {
-            echo "Delete " . $_GET["repo"] . " failed ...<br><br>" . PHP_EOL;
-          }
-        }
+      	
+            $repo = trim($_GET['repo']."");
+
+            if($repo != "") {
+
+                system("rm -rf " . GIT_ROOT . "/" . $repo, $return_code);
+
+                if($return_code == 0) {
+
+                    $log = "Delete " . $repo . " success ..." . PHP_EOL;
+                    echo $log."<br><br>";
+                    file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
+
+                } else {
+
+                    $log = "Delete " . $repo . " failed (".$return_code.")..." . PHP_EOL;
+                    echo $log."<br><br>";
+                    file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
+                }
+            }
+
       }
     }
     if(!file_exists(GIT_ROOT))
