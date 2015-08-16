@@ -212,3 +212,5 @@ if(DEBUG_LOG)
   file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
 }
 
+class GitSmart {
+}
