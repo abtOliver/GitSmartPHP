@@ -25,7 +25,7 @@ if(HTTP_AUTH)
 }
 
 $pathInfo = $_SERVER['PATH_INFO'];
-$pathItems = isset($pathInfo) ? explode('/',$pathInfo) : ['','']; 
+$pathItems = isset($pathInfo) ? explode('/',$pathInfo) : array('',''); 
 
 if($pathItems[1] == '') $pathItems[1] = 'admin';
 
@@ -35,7 +35,7 @@ if(!isset($pathInfo) || strtolower($pathItems[1]) == 'admin' )
   {
     if(isset($_GET["action"]))
     {
-    	
+
         $repo = trim($_GET['repo']."");
 
         if($_GET["action"] == "new") {
