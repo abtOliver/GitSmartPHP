@@ -14,6 +14,8 @@ define("REMOTE_USER", "smart-http");
 define("LOG_RESPONSE", "response.log");
 define("LOG_PROCESS", "process.log");
 
+$gitSmart = new GitSmart(GIT_ROOT);
+
 if (HTTP_AUTH) {
     if (!isset($_SERVER["PHP_AUTH_USER"])) {
         header("WWW-Authenticate: Basic realm=\"Git\"");
@@ -36,16 +38,7 @@ if (!isset($pathInfo) || strtolower($pathItems[1]) == 'admin') {
 
             if ($_GET["action"] == "new") {
 
-
-                if (file_exists(GIT_ROOT . "/" . $repo)) {
-
-                    echo "Repo already exists.<br><br>" . PHP_EOL;
-                } else if ($repo != "") {
-
-                    mkdir(GIT_ROOT . "/" . $repo);
-                    system(GIT_BIN . " init --bare " . GIT_ROOT . "/" . $_GET["repo"]);
-                    echo "<br><br>" . PHP_EOL;
-                }
+                $gitSmart->newRepo($repo);                
             }
 
             if ($_GET["action"] == "delete") {
@@ -183,5 +176,23 @@ if (DEBUG_LOG) {
 }
 
 class GitSmart {
+
+    private $repoRoot;
+
+    function __construct($repoRoot) {
+        $this->repoRoot = $repoRoot;
+    }
+
+    public function newRepo($repo) {
+        if (file_exists(GIT_ROOT . "/" . $repo)) {
+
+            echo "Repo already exists.<br><br>" . PHP_EOL;
+        } else if ($repo != "") {
+
+            mkdir(GIT_ROOT . "/" . $repo);
+            system(GIT_BIN . " init --bare " . GIT_ROOT . "/" . $_GET["repo"]);
+            echo "<br><br>" . PHP_EOL;
+        }
+    }
 
 }
