@@ -41,10 +41,9 @@ if (!isset($pathInfo) || strtolower($pathItems[1]) == 'admin') {
                 try {
                     $gitSmart->newRepo($repo);
                 } catch (Exception $exc) {
-                                echo $exc->getMessage()."<br><br>" . PHP_EOL;
-
+                    echo $exc->getMessage() . "<br><br>" . PHP_EOL;
                 }
-                        }
+            }
 
             if ($_GET["action"] == "delete") {
 
@@ -190,13 +189,13 @@ class GitSmart {
 
     public function newRepo($repo) {
 
-        if (file_exists(GIT_ROOT . "/" . $repo)) {
+        if (file_exists($this->repoRoot . "/" . $repo)) {
 
-            throw new Exception("Repo already exists.");
+            throw new Exception("Repo " . $repo . " already exists.");
         } else if ($repo != "") {
 
-            mkdir(GIT_ROOT . "/" . $repo);
-            system(GIT_BIN . " init --bare " . GIT_ROOT . "/" . $_GET["repo"]);
+            mkdir($this->repoRoot . "/" . $repo);
+            system(GIT_BIN . " init --bare " . $this->repoRoot . "/" . $repo);
             echo "<br><br>" . PHP_EOL;
         }
     }
