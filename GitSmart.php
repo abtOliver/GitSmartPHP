@@ -39,7 +39,10 @@ if (!isset($pathInfo) || strtolower($pathItems[1]) == 'admin') {
             try {
                 if ($_GET["action"] == "new") {
 
-                    $gitSmart->newRepo($repo);
+                    $log = $gitSmart->newRepo($repo) . PHP_EOL;
+
+                    echo $log . "<br><br>";
+                    file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
                 } else if ($_GET["action"] == "delete") {
 
                     $gitSmart->deleteRepo($repo);
@@ -166,7 +169,12 @@ class GitSmart {
     private $repoRoot;
 
     public function __construct($repoRoot) {
+
         $this->repoRoot = $repoRoot;
+
+        if (!file_exists($repoRoot)) {
+            mkdir($repoRoot);
+        }
     }
 
     public function newRepo($repo) {
@@ -178,8 +186,7 @@ class GitSmart {
         }
 
         mkdir($repoPath);
-        system(GIT_BIN . " init --bare '" . $repoPath . "'");
-        echo "<br><br>" . PHP_EOL;
+        return exec(GIT_BIN . " init --bare '" . $repoPath . "'");
     }
 
     public function deleteRepo($repo) {
