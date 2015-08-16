@@ -1,2 +1,4 @@
 _temp
 git/*
+
+*.log
