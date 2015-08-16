@@ -189,15 +189,22 @@ class GitSmart {
 
     public function newRepo($repo) {
 
-        if (file_exists($this->repoRoot . "/" . $repo)) {
+        $repoPath = $this->repoRoot . "/" . $repo;
+
+        if (file_exists($repoPath)) {
 
             throw new Exception("Repo " . $repo . " already exists.");
         } else if ($repo != "") {
 
-            mkdir($this->repoRoot . "/" . $repo);
-            system(GIT_BIN . " init --bare " . $this->repoRoot . "/" . $repo);
+            mkdir($repoPath);
+            $this->gitInit($repoPath);
             echo "<br><br>" . PHP_EOL;
         }
+    }
+
+    private function gitInit($repoPath) {
+
+        system(GIT_BIN . " init --bare " . $repoPath);
     }
 
 }
