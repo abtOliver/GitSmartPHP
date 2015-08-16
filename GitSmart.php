@@ -174,11 +174,11 @@ class GitSmart {
         $repoPath = $this->getRepoPath($repo);
 
         if (file_exists($repoPath)) {
-            throw new Exception("Repo '" . $repo . "' already exists.");
+            throw new Exception("'" . $repo . "' already exists.");
         }
 
         mkdir($repoPath);
-        $this->gitInit($repoPath);
+        system(GIT_BIN . " init --bare '" . $repoPath . "'");
         echo "<br><br>" . PHP_EOL;
     }
 
@@ -187,29 +187,30 @@ class GitSmart {
         $repoPath = $this->getRepoPath($repo);
 
         if (!file_exists($repoPath)) {
-            throw new Exception("Repo '" . $repo . "' not exists.");
+            throw new Exception("'" . $repo . "' not exists.");
         }
 
-        system("rm -rf " . $repoPath, $return_code);
+        system("rm -rf '" . $repoPath . "'", $return_code);
 
         if ($return_code != 0) {
-            throw new Exception("Delete repo '" . $repo . "' failed (" . $return_code . ").");
+            throw new Exception("Delete '" . $repo . "' failed (" . $return_code . ").");
         }
     }
 
     protected function getRepoPath($repo) {
 
-        $repoPath = $this->repoRoot . "/" . $repo;
+        if ($repo == "" ||
+                $this->strStartsWith($repo, "/") ||
+                $this->strStartsWith($repo, ".")) {
 
-        if ($repoPath == $this->repoRoot) {
             throw new Exception("Invalid repo '" . $repo . "'.");
         }
 
-        return $repoPath;
+        return $this->repoRoot . "/" . $repo;
     }
 
-    protected function gitInit($repoPath) {
-        system(GIT_BIN . " init --bare " . $repoPath);
+    function strStartsWith($str, $start) {
+        return substr($str, 0, strlen($start)) === $start;
     }
 
 }
