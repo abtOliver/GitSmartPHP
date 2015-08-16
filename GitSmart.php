@@ -43,6 +43,10 @@ if (!isset($pathInfo) || strtolower($pathItems[1]) == 'admin') {
                 } else if ($_GET["action"] == "delete") {
 
                     $gitSmart->deleteRepo($repo);
+
+                    $log = "Delete repo '" . $repo . "' success ..." . PHP_EOL;
+                    echo $log . "<br><br>";
+                    file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
                 }
             } catch (Exception $exc) {
 
@@ -161,52 +165,50 @@ class GitSmart {
 
     private $repoRoot;
 
-    function __construct($repoRoot) {
+    public function __construct($repoRoot) {
         $this->repoRoot = $repoRoot;
     }
 
     public function newRepo($repo) {
 
-        $repoPath = $this->repoRoot . "/" . $repo;
+        $repoPath = $this->getRepoPath($repo);
 
         if (file_exists($repoPath)) {
-
-            throw new Exception("Repo " . $repo . " already exists.");
-        } else if ($repo != "") {
-
-            mkdir($repoPath);
-            $this->gitInit($repoPath);
-            echo "<br><br>" . PHP_EOL;
+            throw new Exception("Repo '" . $repo . "' already exists.");
         }
+
+        mkdir($repoPath);
+        $this->gitInit($repoPath);
+        echo "<br><br>" . PHP_EOL;
     }
 
     public function deleteRepo($repo) {
 
-        $repoPath = $this->repoRoot . "/" . $repo;
+        $repoPath = $this->getRepoPath($repo);
 
         if (!file_exists($repoPath)) {
+            throw new Exception("Repo '" . $repo . "' not exists.");
+        }
 
-            throw new Exception("Repo " . $repo . " not exists.");
-        } else if ($repo != "") {
+        system("rm -rf " . $repoPath, $return_code);
 
-            system("rm -rf " . $repoPath, $return_code);
-
-            if ($return_code == 0) {
-
-                $log = "Delete " . $repo . " success ..." . PHP_EOL;
-                echo $log . "<br><br>";
-                file_put_contents(LOG_RESPONSE, $log, FILE_APPEND);
-            } else {
-
-                throw new Exception("Delete " . $repo . " failed (" . $return_code . ")..." . PHP_EOL);
-            }
-        } else {
-
-            throw new Exception("Tried to delete " . $repoPath . " failed ...");
+        if ($return_code != 0) {
+            throw new Exception("Delete repo '" . $repo . "' failed (" . $return_code . ").");
         }
     }
 
-    private function gitInit($repoPath) {
+    protected function getRepoPath($repo) {
+
+        $repoPath = $this->repoRoot . "/" . $repo;
+
+        if ($repoPath == $this->repoRoot) {
+            throw new Exception("Invalid repo '" . $repo . "'.");
+        }
+
+        return $repoPath;
+    }
+
+    protected function gitInit($repoPath) {
         system(GIT_BIN . " init --bare " . $repoPath);
     }
 
